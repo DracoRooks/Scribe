@@ -1,1 +1,15 @@
-build/
+*
+
+!.gitignore
+!LICENSE
+!pyproject.toml
+!README.md
+
+!include/
+!include/*
+
+!src/
+!src/*
+
+!python/
+!python/*
