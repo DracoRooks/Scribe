@@ -1,16 +1,19 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace Scribe {
     class WordExtracter
     {
     private:
-        std::vector<std::string_view> words;
+        std::unordered_map<std::string, int> words;
 
     public:
-        WordExtracter();
+        WordExtracter() = default;
         ~WordExtracter() = default;
+
+        void wordify(const std::string& filename);
+        std::unordered_map<std::string, int> getWords() { return words; }
     };
 }
