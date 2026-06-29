@@ -11,5 +11,8 @@
 !src/
 !src/*
 
+!test/
+!test/*
+
 !python/
 !python/*
