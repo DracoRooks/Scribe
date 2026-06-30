@@ -9,6 +9,8 @@ namespace Scribe {
     private:
         std::unordered_map<std::string, int> words;
 
+        int getUTFByteLength(const char ch);
+
     public:
         WordExtracter() = default;
         ~WordExtracter() = default;
