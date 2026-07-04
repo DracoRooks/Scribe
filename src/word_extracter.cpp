@@ -14,7 +14,7 @@ int Scribe::WordExtracter::getUTFByteLength(const char ch) {
     return 1; // for invalid utf-8 byte
 }
 
-void Scribe::WordExtracter::wordify(const std::string& filename) {
+std::unordered_map<std::string, int> Scribe::WordExtracter::wordify(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("[ERROR]::COULD_NOT_OPEN_FILE: " + filename);
@@ -26,10 +26,11 @@ void Scribe::WordExtracter::wordify(const std::string& filename) {
 
     file.close();
 
-    const std::set<char> delimiters{'!', '"', '#', '%', '&', '\'', '(', ')', '*', '+', ',',
-        '-', '_', '.', '/', ':', ';', '<', '=', '>', '?', '[', ']', '~', '`', '\\', '^', '{', '}', '\n'};
-
+    const std::set<char> delimiters{'!', '"', '#', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '_', '.', '/', ':', ';', '<', '=', '>', '?', '[', ']', '~', '`', '\\', '^', '{', '}', '\n'};
+        
+    std::unordered_map<std::string, int> words;
     unsigned long wordStartIndex = 0, wordLen = 0;
+
     while (wordStartIndex < filedata.length()) {
         const char ch = filedata[wordStartIndex + wordLen];
         const int utfByteLen = getUTFByteLength(ch);
@@ -70,4 +71,6 @@ void Scribe::WordExtracter::wordify(const std::string& filename) {
 
         // TODO: Make the function work with multiple files at once.
     }
+
+    return words;
 }
