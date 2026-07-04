@@ -1,27 +1,27 @@
-cmake_minimum_required(VERSION 3.15)
-project(Scribe LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.23)
+project(Scribe
+    VERSION 0.1.0
+    DESCRIPTION "Custom C++20 tokenizer."
+    LANGUAGES CXX
+)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 1. THE CORE LIBRARY (For C++ users)
-add_library(scribe_core STATIC 
-    src/tokenizer.cpp
+set(SOURCES
+    src/word_extracter.cpp
+    src/byte_pair_encoder.cpp
+    python/bindings.cpp
 )
 
-target_include_directories(scribe_core PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
+option(_BUILD_PY_MOD "Build an importable module for Python?" off)
 
-# 2. THE PYTHON MODULE (Only builds when invoked by pip/scikit-build)
-if(NOT DEFINED SKBUILD OR SKBUILD)
+if(SKBUILD OR _BUILD_PY_MOD)
     find_package(Python COMPONENTS Interpreter Development REQUIRED)
     find_package(nanobind CONFIG REQUIRED)
-
-    nanobind_add_module(Scribe 
-        python/bindings.cpp
-    )
-
-    target_link_libraries(scribe_tokenizer PRIVATE scribe_core)
+    nanobind_add_module(Scribe ${SOURCES})
+    target_include_directories(Scribe PUBLIC include)
+else()
+    add_library(Scribe SHARED ${SOURCES})
+    target_include_directories(Scribe PRIVATE include)
 endif()

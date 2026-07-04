@@ -5,6 +5,6 @@ namespace nb = nanobind;
 using namespace nb::literals;
 
 NB_MODULE(Scribe, m) {
-    nb::class_<Scribe::Tokenizer>(m, "Tokenizer")
+    nb::class_<Scribe::BytePairEncoding>(m, "BytePairEncoding")
         .def(nb::init<>());
 }
