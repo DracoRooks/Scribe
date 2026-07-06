@@ -7,8 +7,7 @@
 int main() {
     Scribe::WordExtracter wordifier;
 
-    wordifier.wordify("./test/testdata.txt");
-    std::unordered_map<std::string, int> words = wordifier.getWords();
+    std::unordered_map<std::string, int> words = wordifier.wordify("./test/testdata.txt");
 
     for (auto& word : words) {
         std::cout << '"' << word.first << '"' << " : " << word.second << std::endl;
