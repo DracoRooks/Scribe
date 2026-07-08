@@ -4,7 +4,7 @@
 
 int main() {
     Scribe::BytePairEncoder bpe;
-    bpe.train("./test/testdata.txt", 34, false);
+    bpe.train("./test/testdata.txt", 34, true);
 
     std::cout << "Sample Data: Hello! testing... 🫡" << std::endl;
     const std::vector<int> encodedData = bpe.encode("Hello! testing... 🫡");
