@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
+#include <format>
 
 #include "../include/word_extracter.hpp"
 
@@ -114,12 +115,12 @@ void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, boo
         vocab[newToken] = newBytes;
 
         if (!verbose) continue;
-        std::clog << "[INFO]::NEW_TOKEN_" << newToken << ": Merged Pair {  " << mostFrequentPair.first;
-        std::clog << ", " << mostFrequentPair.second << " \t} : { \'" ;
-        for (auto ch : vocab[mostFrequentPair.first]) std::clog << static_cast<char>(ch);
-        std::clog << "\'\t, \'";
-        for (auto ch : vocab[mostFrequentPair.second]) std::clog << static_cast<char>(ch);
-        std::clog << "\' \t}" << std::endl;
+        std::string log = "[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}";
+        std::string w1 = "", w2 = "";
+        for (auto ch : vocab[mostFrequentPair.first]) w1 += static_cast<char>(ch);
+        for (auto ch : vocab[mostFrequentPair.second]) w2 += static_cast<char>(ch);
+        std::string w3 = w1 + w2;
+        std::clog << std::vformat(log, std::make_format_args(newToken, mostFrequentPair.first, mostFrequentPair.second, w1, w2, w3)) << std::endl;
     }
 }
 

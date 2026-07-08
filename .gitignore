@@ -4,6 +4,7 @@
 !LICENSE
 !pyproject.toml
 !README.md
+!CMakeLists.txt
 
 !include/
 !include/*
