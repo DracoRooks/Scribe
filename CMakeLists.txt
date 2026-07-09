@@ -24,6 +24,7 @@ if(SKBUILD OR _BUILD_PY_MOD)
 
     nanobind_add_stub(Scribe_stub
         MODULE Scribe
+        DEPENDS Scribe
         OUTPUT Scribe.pyi
     )
 else()
