@@ -27,6 +27,9 @@ if(SKBUILD OR _BUILD_PY_MOD)
         DEPENDS Scribe
         OUTPUT Scribe.pyi
     )
+
+    install(TARGETS Scribe DESTINATION .)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Scribe.pyi DESTINATION .)
 else()
     add_library(Scribe SHARED ${SOURCES})
     target_include_directories(Scribe PRIVATE include)
