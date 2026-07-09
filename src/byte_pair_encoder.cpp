@@ -33,7 +33,7 @@ Scribe::Pair Scribe::BytePairEncoder::getMostFrequentPair(const WordCounts& word
         int i = 0, j = 1;
         while (j < len) {
             Pair pair = { word[i], word[j] };
-            pairCounts[pair]++;
+            pairCounts[pair] += count;
 
             if (pairCounts[pair] > maxCount) {
                 maxCount = pairCounts[pair];
