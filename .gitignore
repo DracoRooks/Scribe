@@ -1,5 +1,9 @@
 *
 
+!.github/
+!.github/workflows/
+!.github/workflows/*
+
 !.gitignore
 !LICENSE
 !pyproject.toml
