@@ -17,7 +17,7 @@ set(SOURCES
 option(_BUILD_PY_MOD "Build an importable module for Python?" off)
 
 if(SKBUILD OR _BUILD_PY_MOD)
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+    find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
     find_package(nanobind CONFIG REQUIRED)
     nanobind_add_module(Scribe ${SOURCES})
     target_include_directories(Scribe PUBLIC include)
