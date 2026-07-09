@@ -21,6 +21,11 @@ if(SKBUILD OR _BUILD_PY_MOD)
     find_package(nanobind CONFIG REQUIRED)
     nanobind_add_module(Scribe ${SOURCES})
     target_include_directories(Scribe PUBLIC include)
+
+    nanobind_add_stub(Scribe_stub
+        MODULE Scribe
+        OUTPUT Scribe.pyi
+    )
 else()
     add_library(Scribe SHARED ${SOURCES})
     target_include_directories(Scribe PRIVATE include)
