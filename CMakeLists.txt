@@ -43,6 +43,7 @@ if(SKBUILD OR _BUILD_PY_MOD)
         MODULE Scribe
         DEPENDS Scribe
         OUTPUT Scribe.pyi
+        PYTHON_PATH $<TARGET_FILE_DIR:Scribe>
     )
 
     install(TARGETS Scribe DESTINATION .)
