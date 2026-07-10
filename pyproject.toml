@@ -32,7 +32,10 @@ build-verbosity = 1
 skip = ["musllinux", "pp*"]
 
 [tool.cibuildwheel.linux]
-before-all = "yum install -y python3-devel || apt-get install -y python3-devel || true"
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+before-all = "yum install -y gcc-toolset-13"
+environment = { CC = "/opt/rh/gcc-toolset-13/root/usr/bin/gcc", CXX = "/opt/rh/gcc-toolset-13/root/usr/bin/g++"}
 
 [tool.cibuildwheel.macos]
 archs = ["x86_64", "arm64"]
