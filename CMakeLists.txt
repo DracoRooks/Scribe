@@ -31,7 +31,6 @@ if(SKBUILD OR _BUILD_PY_MOD)
 
     install(TARGETS Scribe
         DESTINATION .
-        COMPONENT Runtime
     )
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Scribe.pyi DESTINATION .)
 else()
