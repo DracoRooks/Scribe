@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core", "nanobind"]
+requires = ["scikit-build-core>=0.10", "nanobind>=2.4"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -21,6 +21,21 @@ cmake.version = ">=3.23"
 cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
 install.components = ["python_module"]
-wheel.packages = [
-    "Scribe"
-]
+wheel.packages = []
+wheel.install-dir = "."
+
+[tool.scikit-build.cmake.define]
+_BUILD_PY_MOD = "ON"
+
+[tool.cibuildwheel]
+build-verbosity = 1
+skip = ["musllinux", "pp*"]
+
+[tool.cibuildwheel.linux]
+before-all = "yum install -y python3-devel || apt-get install -y python3-devel || true"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
