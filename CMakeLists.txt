@@ -29,7 +29,10 @@ if(SKBUILD OR _BUILD_PY_MOD)
         OUTPUT Scribe.pyi
     )
 
-    install(TARGETS Scribe DESTINATION .)
+    install(TARGETS Scribe
+        DESTINATION .
+        COMPONENT Runtime
+    )
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Scribe.pyi DESTINATION .)
 else()
     MESSAGE("Building library for cpp...")
