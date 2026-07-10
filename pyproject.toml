@@ -22,7 +22,6 @@ cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
 install.components = ["python_module"]
 wheel.packages = []
-wheel.install-dir = "."
 
 [tool.scikit-build.cmake.define]
 _BUILD_PY_MOD = "ON"
@@ -30,12 +29,6 @@ _BUILD_PY_MOD = "ON"
 [tool.cibuildwheel]
 build-verbosity = 1
 skip = ["musllinux", "pp*"]
-
-[tool.cibuildwheel.linux]
-manylinux-x86_64-image = "manylinux_2_28"
-manylinux-aarch64-image = "manylinux_2_28"
-before-all = "yum install -y gcc-toolset-13"
-environment = { CC = "/opt/rh/gcc-toolset-13/root/usr/bin/gcc", CXX = "/opt/rh/gcc-toolset-13/root/usr/bin/g++"}
 
 [tool.cibuildwheel.macos]
 archs = ["x86_64", "arm64"]
