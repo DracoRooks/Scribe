@@ -30,8 +30,5 @@ _BUILD_PY_MOD = "ON"
 build-verbosity = 1
 skip = ["musllinux", "pp*"]
 
-[tool.cibuildwheel.macos]
-archs = ["x86_64", "arm64"]
-
 [tool.cibuildwheel.windows]
 archs = ["AMD64"]
