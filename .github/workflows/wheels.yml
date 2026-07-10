@@ -27,6 +27,7 @@ jobs:
         env:
           CIBW_SKIP: "cp36-* cp37-* pp*"
           CIBW_BUILD_VERBOSITY: 1
+          CIBW_BUILD_FRONTEND: "pip; args; --no-cache-dir"
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
