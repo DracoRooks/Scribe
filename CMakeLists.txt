@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.28)
 project(Scribe
     VERSION 0.1.0
     DESCRIPTION "Custom C++20 tokenizer."
@@ -19,6 +19,7 @@ FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
     GIT_TAG        11.0.2
+    EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(fmt)
 

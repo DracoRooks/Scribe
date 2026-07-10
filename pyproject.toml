@@ -17,7 +17,7 @@ classifiers = [
 ]
 
 [tool.scikit-build]
-cmake.version = ">=3.23"
+cmake.version = ">=3.28"
 cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
 install.components = ["python_module"]
