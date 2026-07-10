@@ -20,7 +20,6 @@ classifiers = [
 cmake.version = ">=3.28"
 cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
-install.components = ["python_module"]
 wheel.packages = []
 
 [tool.scikit-build.cmake.define]
