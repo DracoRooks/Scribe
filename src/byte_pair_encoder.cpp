@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
-#include <format>
+#include <cstdint>
+#include <fmt/format.h>
 
 #include "../include/word_extracter.hpp"
 
@@ -73,7 +74,7 @@ void Scribe::BytePairEncoder::doMerge(WordCounts& wordCounts, const Pair& mostFr
 
 Scribe::BytePairEncoder::BytePairEncoder() {
     for (int i = 0; i < 256; i++) {
-        const u_int8_t ch = static_cast<u_int8_t>(i);
+        const uint8_t ch = static_cast<uint8_t>(i);
 
         vocab[i] = { ch };
         utf8Lookup[ch] = i;
@@ -110,17 +111,16 @@ void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, boo
 
         mergeForest.emplace_back(mostFrequentPair, newToken);
 
-        std::vector<u_int8_t> newBytes = vocab[mostFrequentPair.first];
+        std::vector<uint8_t> newBytes = vocab[mostFrequentPair.first];
         newBytes.insert(newBytes.end(), vocab[mostFrequentPair.second].begin(), vocab[mostFrequentPair.second].end());
         vocab[newToken] = newBytes;
 
         if (!verbose) continue;
-        std::string log = "[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}";
         std::string w1 = "", w2 = "";
         for (auto ch : vocab[mostFrequentPair.first]) w1 += static_cast<char>(ch);
         for (auto ch : vocab[mostFrequentPair.second]) w2 += static_cast<char>(ch);
         std::string w3 = w1 + w2;
-        std::clog << std::vformat(log, std::make_format_args(newToken, mostFrequentPair.first, mostFrequentPair.second, w1, w2, w3)) << std::endl;
+        std::clog << fmt::format("[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}", newToken, mostFrequentPair.first, mostFrequentPair.second, w1, w2, w3) << std::endl;
     }
 }
 
@@ -135,8 +135,8 @@ std::vector<Scribe::Token> Scribe::BytePairEncoder::encode(const std::string& da
     return encodedData[0].first;
 }
 
-std::vector<u_int8_t> Scribe::BytePairEncoder::decode(const std::vector<Token>& tokens) {
-    std::vector<u_int8_t> decodedData;
+std::vector<uint8_t> Scribe::BytePairEncoder::decode(const std::vector<Token>& tokens) {
+    std::vector<uint8_t> decodedData;
 
     for (const Token token : tokens) {
         decodedData.insert(decodedData.end(), vocab[token].begin(), vocab[token].end());

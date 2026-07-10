@@ -2,6 +2,8 @@ name: Build Wheels
 
 on:
   push:
+    branches: [main, staging]
+  pull_request:
     branches: [main]
   release:
     types: [published]
@@ -11,8 +13,9 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Clone Repository
@@ -23,12 +26,9 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v2.21
         env:
-          CIBW_SKIP: "cp36-* cp37-* pp*"
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-          CIBW_MANYLINUX_I686_IMAGE: manylinux_2_28
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
+          CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
 [build-system]
-requires = ["scikit-build-core", "nanobind"]
-build-backend = "scikit-build-core.build"
+requires = ["scikit-build-core>=0.10", "nanobind>=2.4"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "Scribe"
@@ -17,6 +17,17 @@ classifiers = [
 ]
 
 [tool.scikit-build]
-cmake.version = ">=3.23"
+cmake.version = ">=3.28"
+cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
-install.components = ["python_module"]
+wheel.packages = []
+
+[tool.scikit-build.cmake.define]
+_BUILD_PY_MOD = "ON"
+
+[tool.cibuildwheel]
+build-verbosity = 1
+skip = ["pp*"]
+
+[tool.cibuildwheel.windows]
+archs = ["AMD64"]
