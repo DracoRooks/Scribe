@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 namespace Scribe {
     struct PairHash {
@@ -19,8 +20,8 @@ namespace Scribe {
 
     class BytePairEncoder {
     private:
-        std::unordered_map<Token, std::vector<u_int8_t>> vocab;
-        std::unordered_map<u_int8_t, Token> utf8Lookup;
+        std::unordered_map<Token, std::vector<uint8_t>> vocab;
+        std::unordered_map<uint8_t, Token> utf8Lookup;
         std::vector<std::pair<Pair, Token>> mergeForest;
 
         std::vector<Token> getCodePoints(const std::string& str);
@@ -33,6 +34,6 @@ namespace Scribe {
 
         void train(const std::string& filename, int cycles, bool verbose);
         std::vector<Token> encode(const std::string& data);
-        std::vector<u_int8_t> decode(const std::vector<Token>& tokens);
+        std::vector<uint8_t> decode(const std::vector<Token>& tokens);
     };
 }
