@@ -24,4 +24,3 @@ install.components = ["python_module"]
 wheel.packages = [
     "Scribe"
 ]
-wheel.expand-signals = true
