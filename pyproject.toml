@@ -29,8 +29,5 @@ _BUILD_PY_MOD = "ON"
 build-verbosity = 1
 skip = ["pp*"]
 
-[tool.cibuildwheel.macos]
-archs = ["x86_64", "arm64"]
-
 [tool.cibuildwheel.windows]
 archs = ["AMD64"]
