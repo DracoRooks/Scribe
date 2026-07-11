@@ -1,10 +1,10 @@
 [build-system]
-requires = ["scikit-build-core>=0.10", "nanobind>=2.4"]
+requires = ["scikit-build-core>=0.10", "nanobind>=2.4", "setuptools-scm>=8"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "Scribe"
-version = "0.1.0"
+name = "PolyScribe"
+dynamic = ["version"]
 authors = [{name = "DracoRooks"}]
 description = "Custom C++20 tokenizer."
 readme = "README.md"
@@ -21,6 +21,9 @@ cmake.version = ">=3.28"
 cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
 wheel.packages = []
+metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+
+[tools.setuptools_scm]
 
 [tool.scikit-build.cmake.define]
 _BUILD_PY_MOD = "ON"
