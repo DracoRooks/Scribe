@@ -21,9 +21,17 @@ cmake.version = ">=3.28"
 cmake.args = ["-D_BUILD_PY_MOD=ON"]
 ninja.make-fallback = true
 wheel.packages = []
-metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+sdist.include = [
+    "CMakeLists.txt",
+    "src/*",
+    "include/*",
+    "python/*"
+]
 
-[tools.setuptools_scm]
+[[tool.dynamic-metadata]]
+provider = "scikit_build_core.metadata.setuptools_scm"
+
+[tool.setuptools_scm]
 
 [tool.scikit-build.cmake.define]
 _BUILD_PY_MOD = "ON"
