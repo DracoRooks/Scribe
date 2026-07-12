@@ -29,10 +29,9 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v2.21
+        uses: pypa/cibuildwheel@v4.0
         env:
           CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
-          CIBW_ENABLE: "cpython-prerelease"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
