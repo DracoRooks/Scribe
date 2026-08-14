@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <fmt/format.h>
 
+#include <../include/typedefs.hpp>
 #include "../include/word_extracter.hpp"
 
 std::vector<Scribe::Token> Scribe::BytePairEncoder::getCodePoints(const std::string& str) {
@@ -48,14 +49,57 @@ Scribe::Pair Scribe::BytePairEncoder::getMostFrequentPair(const WordCounts& word
     return mostFrequentPair;
 }
 
-void Scribe::BytePairEncoder::doMerge(WordCounts& wordCounts, const Pair& mostFrequentPair, const int newToken) {
+Scribe::Pair Scribe::BytePairEncoder::getBestRankedPair(const WordCounts& wordCounts) {
+    PairCounts pairCounts;
+    std::unordered_map<Token, Count> tokenCounts;
+    double maxScore = 0;
+    Pair bestPair = { -1, -1 };
+
+    for (const auto& [word, count] : wordCounts) {
+        int len = word.size();
+        if (len < 2) continue;
+
+        int i = 0, j = 1;
+        tokenCounts[word[0]] += count;
+        while (j < len) {
+            Pair pair = { word[i], word[j] };
+            pairCounts[pair] += count;
+            tokenCounts[word[j]] += count;
+
+            i++; j++;
+        }
+    }
+
+    for (const auto& [word, count] : wordCounts) {
+        int len = word.size();
+        if (len < 2) continue;
+
+        int i = 0, j = 1;
+        while (j < len) {
+            Pair pair = { word[i], word[j] };
+
+            double score = (double)pairCounts[pair] / tokenCounts[word[i]];
+            score /= tokenCounts[word[j]];
+            if (score > maxScore) {
+                maxScore = score;
+                bestPair = pair;
+            }
+
+            i++; j++;
+        }
+    }
+
+    return bestPair;
+}
+
+void Scribe::BytePairEncoder::doMerge(WordCounts& wordCounts, const Pair& pairToMerge, const int newToken) {
     for (auto& [word, _] : wordCounts) {
         int len = word.size();
         int read_idx = 0;
         int write_idx = 0;
 
         while (read_idx < len) {
-            if (read_idx + 1 < len && word[read_idx] == mostFrequentPair.first && word[read_idx + 1] == mostFrequentPair.second) {
+            if (read_idx + 1 < len && word[read_idx] == pairToMerge.first && word[read_idx + 1] == pairToMerge.second) {
                 word[read_idx] = newToken;
                 word[write_idx++] = std::move(word[read_idx]);
 
@@ -81,7 +125,7 @@ Scribe::BytePairEncoder::BytePairEncoder() {
     }
 }
 
-void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, bool verbose) {
+void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, bool normalizedRanking, bool verbose) {
     WordExtracter extracter;
 
     std::unordered_map<std::string, Count> strWordCounts = extracter.wordify(filename);
@@ -97,9 +141,12 @@ void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, boo
         wordCounts.emplace_back(std::move(initialTokens), count);
     }
 
+    Pair pairToMerge;
     for (int i = 0; i < cycles; i++) {
-        Pair mostFrequentPair = getMostFrequentPair(wordCounts);
-        if (mostFrequentPair == Pair(-1, -1)) {
+        if (!normalizedRanking) pairToMerge = getMostFrequentPair(wordCounts);
+        else pairToMerge = getBestRankedPair(wordCounts);
+
+        if (pairToMerge == Pair(-1, -1)) {
             std::cerr << "\n\n[INFO]::BYTE_PAIR_ENCODER::CYCLES: Max possible vocab size reached, ";
             std::cerr << "{Cycles: " << cycles << "} is too high for the provided dataset.";
             std::cerr << "\nFinishing gracefully at cycle: " << i << "." << std::endl;
@@ -107,20 +154,20 @@ void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, boo
         }
 
         int newToken = i + 256;
-        doMerge(wordCounts, mostFrequentPair, newToken);
+        doMerge(wordCounts, pairToMerge, newToken);
 
-        mergeForest.emplace_back(mostFrequentPair, newToken);
+        mergeForest.emplace_back(pairToMerge, newToken);
 
-        std::vector<uint8_t> newBytes = vocab[mostFrequentPair.first];
-        newBytes.insert(newBytes.end(), vocab[mostFrequentPair.second].begin(), vocab[mostFrequentPair.second].end());
+        std::vector<uint8_t> newBytes = vocab[pairToMerge.first];
+        newBytes.insert(newBytes.end(), vocab[pairToMerge.second].begin(), vocab[pairToMerge.second].end());
         vocab[newToken] = newBytes;
 
         if (!verbose) continue;
         std::string w1 = "", w2 = "";
-        for (auto ch : vocab[mostFrequentPair.first]) w1 += static_cast<char>(ch);
-        for (auto ch : vocab[mostFrequentPair.second]) w2 += static_cast<char>(ch);
+        for (auto ch : vocab[pairToMerge.first]) w1 += static_cast<char>(ch);
+        for (auto ch : vocab[pairToMerge.second]) w2 += static_cast<char>(ch);
         std::string w3 = w1 + w2;
-        std::clog << fmt::format("[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}", newToken, mostFrequentPair.first, mostFrequentPair.second, w1, w2, w3) << std::endl;
+        std::clog << fmt::format("[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}", newToken, pairToMerge.first, pairToMerge.second, w1, w2, w3) << std::endl;
     }
 }
 
