@@ -14,11 +14,13 @@ NB_MODULE(Scribe, m) {
 
     nb::class_<Scribe::BytePairEncoder>(m, "BytePairEncoder", "A module that applies BPE algorithm on the given text to generate word/sub-word tokens."
     ).def(nb::init<>()
-    ).def("train", &Scribe::BytePairEncoder::train, nb::arg("filename"), nb::arg("cycles"), nb::arg("verbose"),
+    ).def("train", &Scribe::BytePairEncoder::train, nb::arg("filename"), nb::arg("cycles"), nb::arg("verbose"), nb::arg("normalizedRanking"),
         "Trains the tokenizer on text data contained in `filename` file.\n\n"
         "Args:\n"
         "   filename (str): Path to the training data (taken relative from the directory the function will be called in).\n"
         "   cycles (int): Number of cycles to train the tokenizer for, total vocab size will be 256 + `cycles`.\n"
+        "   normalizedRanking (bool): If false, follows default BPE Scoring for token pairs, i.e. P(A|B)."
+        "       If true, follows WordPiece Scoring for token pairs, i.e. P(A|B)/P(A)*P(B)."
         "   verbose (bool): If true, prints log of every merge cycle to standard output.\n"
         "Returns:\n"
         "   None"
