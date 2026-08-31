@@ -14,7 +14,7 @@ NB_MODULE(Scribe, m) {
 
     nb::class_<Scribe::BytePairEncoder>(m, "BytePairEncoder", "A module that applies BPE algorithm on the given text to generate word/sub-word tokens."
     ).def(nb::init<>()
-    ).def("train", &Scribe::BytePairEncoder::train, nb::arg("filename"), nb::arg("cycles"), nb::arg("verbose"), nb::arg("normalizedRanking"),
+    ).def("train", &Scribe::BytePairEncoder::train, nb::arg("filename"), nb::arg("cycles"), nb::arg("normalizedRanking"), nb::arg("verbose"),
         "Trains the tokenizer on text data contained in `filename` file.\n\n"
         "Args:\n"
         "   filename (str): Path to the training data (taken relative from the directory the function will be called in).\n"
