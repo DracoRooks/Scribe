@@ -9,6 +9,8 @@
 !pyproject.toml
 !README.md
 !CMakeLists.txt
+!Doxyfile
+!.readthedocs.yml
 
 !include/
 !include/*
@@ -21,3 +23,8 @@
 
 !python/
 !python/*
+
+!docs/
+!docs/conf.py
+!docs/index.md
+!docs/requirements.txt
