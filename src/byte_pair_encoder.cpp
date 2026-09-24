@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <fmt/format.h>
 
-#include <../include/typedefs.hpp>
+#include "../include/typedefs.hpp"
 #include "../include/word_extracter.hpp"
 
 std::vector<Scribe::Token> Scribe::BytePairEncoder::getCodePoints(const std::string& str) {
@@ -118,7 +118,7 @@ void Scribe::BytePairEncoder::doMerge(WordCounts& wordCounts, const Pair& pairTo
 
 Scribe::BytePairEncoder::BytePairEncoder() {
     for (int i = 0; i < 256; i++) {
-        const uint8_t ch = static_cast<uint8_t>(i);
+        const char ch = static_cast<char>(i);
 
         vocab[i] = { ch };
         utf8Lookup[ch] = i;
@@ -158,14 +158,11 @@ void Scribe::BytePairEncoder::train(const std::string& filename, int cycles, boo
 
         mergeForest.emplace_back(pairToMerge, newToken);
 
-        std::vector<uint8_t> newBytes = vocab[pairToMerge.first];
-        newBytes.insert(newBytes.end(), vocab[pairToMerge.second].begin(), vocab[pairToMerge.second].end());
-        vocab[newToken] = newBytes;
+        vocab[newToken] = vocab[pairToMerge.first] + vocab[pairToMerge.second];
 
         if (!verbose) continue;
-        std::string w1 = "", w2 = "";
-        for (auto ch : vocab[pairToMerge.first]) w1 += static_cast<char>(ch);
-        for (auto ch : vocab[pairToMerge.second]) w2 += static_cast<char>(ch);
+        std::string w1 = vocab[pairToMerge.first];
+        std::string w2 = vocab[pairToMerge.second];
         std::string w3 = w1 + w2;
         std::clog << fmt::format("[INFO]::NEW_TOKEN_{:<6}: Merged Pair {{{:^6}, {:^6}}} : {{{:^15}, {:^15}}} -> {:<40}", newToken, pairToMerge.first, pairToMerge.second, w1, w2, w3) << std::endl;
     }
@@ -182,11 +179,11 @@ std::vector<Scribe::Token> Scribe::BytePairEncoder::encode(const std::string& da
     return encodedData[0].first;
 }
 
-std::vector<uint8_t> Scribe::BytePairEncoder::decode(const std::vector<Token>& tokens) {
-    std::vector<uint8_t> decodedData;
+std::string Scribe::BytePairEncoder::decode(const std::vector<Token>& tokens) {
+    std::string decodedData;
 
     for (const Token token : tokens) {
-        decodedData.insert(decodedData.end(), vocab[token].begin(), vocab[token].end());
+        decodedData += vocab[token];
     }
 
     return decodedData;
